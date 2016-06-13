@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d6bbd1292afba4c478ba311a88091cc0
+timeCreated: 1463139905
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - openSprite: {instanceID: 0}
+  - randomItem: {instanceID: 0}
+  - chestOpen: {fileID: 8300000, guid: 310560a97665a4abb83ef914655c8711, type: 3}
+  - weapon: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

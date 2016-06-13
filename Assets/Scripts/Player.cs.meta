@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 16e3f930239ae4562865b7c0918b8677
+timeCreated: 1463137476
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - boxCollider: {instanceID: 0}
+  - healthText: {instanceID: 0}
+  - glove: {instanceID: 0}
+  - boot: {instanceID: 0}
+  - yourTurn: {instanceID: 0}
+  - weaponComp1: {instanceID: 0}
+  - weaponComp2: {instanceID: 0}
+  - weaponComp3: {instanceID: 0}
+  - moveSound1: {instanceID: 0}
+  - moveSound2: {instanceID: 0}
+  - eatSound1: {fileID: 8300000, guid: b4e7b077dc7d4614bbedac87a7980723, type: 3}
+  - eatSound2: {fileID: 8300000, guid: 7cb0680fae1c446448f2d1687be6de69, type: 3}
+  - drinkSound1: {fileID: 8300000, guid: 8e3613b6eca3c1647bbc0f5575247399, type: 3}
+  - drinkSound2: {instanceID: 0}
+  - gameOverSound: {instanceID: 0}
+  - equipItemSound: {instanceID: 0}
+  - equipSwordSound: {instanceID: 0}
+  - transitionSound: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

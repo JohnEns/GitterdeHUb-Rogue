@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &133658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 433658}
+  - 114: {fileID: 11433656}
+  - 114: {fileID: 11445686}
+  - 114: {fileID: 11439582}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Exit
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &433658
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133658}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11433656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d59e4dfb9c9404b9471de0c983feac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textDelay: 3
+  turnDelay: 0.1
+  healthPoints: 100
+  villtPoints: 100
+  actionPoints: 0
+  XPPoints: 0
+  stageNumber: 0
+  playersTurn: 1
+  ambient: []
+  enemiesFaster: 0
+  enemiesSmarter: 1
+  enemySpawnRatio: 20
+  enemyPower: 3
+--- !u!114 &11439582
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3f6fc3473b39042be2b2c82740a720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minBound: 0
+  maxBound: 0
+  endPos: {x: 0, y: 0}
+--- !u!114 &11445686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff182172d726402b9e9eacdb89c9724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  columns: 5
+  rows: 5
+  exit: {fileID: 143266, guid: c2aba3e0887d130488b8ba22319df5ef, type: 2}
+  floorTilesArray: []
+  floorTiles: []
+  wallTiles: []
+  outerWallTiles: []
+  chestTile: {fileID: 199894, guid: b5e1b58c50701be4688ac4f5d63cd013, type: 2}
+  ExitLevel: {fileID: 184230, guid: fc7bb6519f27bae4f8d1ae817b490d3e, type: 2}
+  enemyTiles:
+  - {fileID: 130908, guid: 63619eddb9dc4b847ad8d19c9f050d20, type: 2}
+  - {fileID: 115608, guid: 4391e23b29fcc934a8b2e1cc21cdeeb7, type: 2}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 133658}
+  m_IsPrefabParent: 1
