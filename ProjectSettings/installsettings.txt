@@ -1,0 +1,4 @@
+[InstallSettings]
+SelectedComponents=conf,conf\cmedia,driverclean,stereoupmix
+DeselectedComponents=
+SelectedCard=Xonar DGX
