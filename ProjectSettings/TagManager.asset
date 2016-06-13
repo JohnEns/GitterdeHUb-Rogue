@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Exit
+  - Food
+  - Soda
+  - Item
+  - Weapon
+  - Enemy
+  - Chest
+  - Wall
+  - Villt
+  - ExitLevel
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - BlockingLayer
+  - Floor
+  - Items
+  - Units
+  - GUI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Floor
+    uniqueID: 1351893129
+    locked: 0
+  - name: Items
+    uniqueID: 334903649
+    locked: 0
+  - name: Units
+    uniqueID: 4280688153
+    locked: 0
