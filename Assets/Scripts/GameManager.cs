@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private Text scoreText;
 
     private BoardManager boardscript;
-    private BoardManager stage1BoardScript;
+    private stage1boardman stage1BoardScript;
     private BoardManager stage2BoardScript;
     private DungeonManager dungeonScript;
     private Player playerScript;
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     public int enemySpawnRatio = 20;
     public int enemyPower = 3;
 
-
+    
     //Awake is always called before any Start functions
     private void Awake()
     {
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
 
         stageNumber = 0;
         boardscript = GetComponent<BoardManager>();
-        stage1BoardScript = GetComponent<BoardManager>();
+        stage1BoardScript = GetComponent<stage1boardman>();
         stage2BoardScript = GetComponent<BoardManager>();
 
         dungeonScript = GetComponent<DungeonManager>();
@@ -101,6 +101,14 @@ public class GameManager : MonoBehaviour
         //SoundManager.instance.PlaySingle();
 
     }
+
+    private void InitGameStage1()
+    {
+        enemies.Clear();
+        stage1BoardScript.S1_BoardSetup();
+        playerInDungeon = false;
+    }
+
     private void HideLevelImage()
     {
         levelImage.SetActive(false);
@@ -175,7 +183,6 @@ public class GameManager : MonoBehaviour
                 enemiesToDestroy.AddRange(ClearWorldBoardEnemies());
             }
             enemies[i].MoveEnemy();
-            //enemies[i].enemyMoves.Play();
             yield return new WaitForSeconds(enemies[i].moveTime);
         }
 
@@ -215,10 +222,11 @@ public class GameManager : MonoBehaviour
     {
         for (var i = 0; i < enemies.Count; i++)
         {
-            if (!enemies[i].getSpriteRenderer().isVisible || !boardscript.checkValidTile(enemies[i].transform.position))
+            if (!enemies[i].getSpriteRenderer().isVisible || !boardscript.checkValidTile (enemies[i].transform.position))
             {
                 yield return enemies[i];
             }
+            
         }
     }
 
@@ -252,6 +260,7 @@ public class GameManager : MonoBehaviour
     {
         dungeonScript.StartDungeon();
         boardscript.SetDungeonBoard(dungeonScript.gridPositions, dungeonScript.maxBound, dungeonScript.endPos);
+
         playerScript.dungeonTransition = false;
         playerInDungeon = true;
 
@@ -270,61 +279,36 @@ public class GameManager : MonoBehaviour
 
     public void stageTransition()
     {
-        //GL.Clear(true, false, UnityEngine.Color.black);
+        boardscript.clearScene();
 
-        selectNextStage();
+        //stageNumber++;
+        stageNumber = 1;
+
+        Destroy(boardscript);
+        boardscript = GetComponent<BoardManager>();
+
+        InitGame();
     }
 
     public void selectNextStage()
     {
-        if (SceneManager.GetActiveScene().name == "stage0")
+        if (SceneManager.GetActiveScene().name == "Main")
         {
-            stageNumber = 1;
-            SceneManager.LoadScene("kloemp");
+
+            //SceneManager.LoadScene("kloemp");
+           
+            //SceneManager.LoadScene("stage0");
+
             //SceneManager.LoadScene("stage1");
 
-            boardscript.transferScene();
-            InitStage1();
+            //InitStage1();
         }
         else if (SceneManager.GetActiveScene().name == "stage1")
         {
             stageNumber = 2;
             SceneManager.LoadScene("stage2");
-            InitStage2();
+            //InitStage2();
         }
-    }
-
-    private void InitStage1()
-    {
-        //Clear any Enemy objects in our List to prepare for next level.
-        enemies.Clear();
-        stage1BoardScript.BoardSetup();
-        playerInDungeon = false;
-
-        //levelImage = GameObject.Find("LevelImage");
-        //levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        //levelText.text = "Welcome \n \n Search and Kill to \n Survive";
-        //levelImage.SetActive(true);
-        //Invoke("HideLevelImage", 0f);
-
-        //SoundManager.instance.PlaySingle();
-
-    }
-    private void InitStage2()
-    {
-        //Clear any Enemy objects in our List to prepare for next level.
-        enemies.Clear();
-        stage2BoardScript.BoardSetup();
-        playerInDungeon = false;
-
-        //levelImage = GameObject.Find("LevelImage");
-        //levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        //levelText.text = "Welcome \n \n Search and Kill to \n Survive";
-        //levelImage.SetActive(true);
-        //Invoke("HideLevelImage", 0f);
-
-        //SoundManager.instance.PlaySingle();
-
     }
 
     public void exitDungeon()

@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Enemy : MovingObject
 {
-	public int playerDamage;
+	public int enemyStrikePower;
 	public int hp = 20;
 
 	private Animator animator;
 	private Transform target;
 	private bool skipMove;
+
+    private int xHeading;
+    private int yHeading;
 
     public AudioClip enemyAttack1;
     public AudioClip enemyAttack2;
@@ -16,6 +20,7 @@ public class Enemy : MovingObject
     public AudioClip enemyMove;
 
     private SpriteRenderer spriteRenderer;
+    private bool closeToPlayer = false;
 
 	protected override void Start()
     {
@@ -42,18 +47,18 @@ public class Enemy : MovingObject
 
         base.AttemptMove<T>(xDir, yDir);
         skipMove = true;
-        if (getSpriteRenderer().isVisible) enemyMoves.Play();
             return true;
 	}
+
 
     public void MoveEnemy() {
         int xDir = 0;
         int yDir = 0;
 
+        CheckDistanceToPlayer();
+
         if (GameManager.instance.enemiesSmarter)
         {
-            int xHeading = (int)target.position.x - (int)transform.position.x;
-            int yHeading = (int)target.position.y - (int)transform.position.y;
             bool moveOnX = false;
 
             if (Mathf.Abs(xHeading) >= Mathf.Abs(yHeading))
@@ -121,16 +126,39 @@ public class Enemy : MovingObject
             {
                 xDir = target.position.x > transform.position.x ? 1 : -1;
             }
+
         }
         
         AttemptMove<Player>(xDir, yDir);
     }
 
+    private void CheckDistanceToPlayer()
+    {
+        xHeading = (int)target.position.x - (int)transform.position.x;
+        yHeading = (int)target.position.y - (int)transform.position.y;
+
+        int absX = Math.Abs(xHeading);
+        int absY = Math.Abs(yHeading);
+
+        if (absX < 6 && absY < 4)
+        {
+            //closeToPlayer = true;
+            MakeSoundCloseToPlayer();
+        }
+        
+    }
+
+    private void MakeSoundCloseToPlayer()
+    {
+        enemyMoves.Play();
+        closeToPlayer = false;
+    }
+
     protected override void OnCantMove <T> (T component)
     {
-        playerDamage = GameManager.instance.enemyPower;
+        enemyStrikePower = GameManager.instance.enemyPower;
         Player hitPlayer = component as Player;
-        hitPlayer.LoseHealth(playerDamage);
+        hitPlayer.LoseHealth(enemyStrikePower);
         animator.SetTrigger("enemyAttack");
         SoundManager.instance.RandomizeSfx2(enemyAttack1, enemyAttack2);
     }

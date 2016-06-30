@@ -5,48 +5,48 @@ using System.Linq;
 using System.Collections.Generic; 		//Allows us to use Lists.
 using Random = UnityEngine.Random; 		//Tells Random to use the Unity Engine random number generator.
 
-	
-public class BoardManager : MonoBehaviour
+public class stage0boardman : BoardManager
 {
-	// Using Serializable allows us to embed a class with sub properties in the inspector.
-	[Serializable]
-	public class Count
-	{
-		public int minimum; 			//Minimum value for our Count class.
-		public int maximum; 			//Maximum value for our Count class.
-		
-		
-		//Assignment constructor.
-		public Count (int min, int max)
-		{
-			minimum = min;
-			maximum = max;
-		}
-	}
+    // Using Serializable allows us to embed a class with sub properties in the inspector.
+    [Serializable]
+    public class Count
+    {
+        public int minimum;             //Minimum value for our Count class.
+        public int maximum;             //Maximum value for our Count class.
+
+
+        //Assignment constructor.
+        public Count(int min, int max)
+        {
+            minimum = min;
+            maximum = max;
+        }
+    }
 
     public int columns = 5;
     public int rows = 5;
-  	public GameObject exit;
-    public GameObject[] floorTilesArray;
-    public List<GameObject> floorTiles = new List<GameObject>();
-    public List<GameObject> wallTiles = new List<GameObject>();
-    public List<GameObject> outerWallTiles = new List<GameObject>();
+    public GameObject s0_exit;
+    public GameObject[] s0_floorTilesArray;
+    public List<GameObject> s0_floorTiles = new List<GameObject>();
+    public List<GameObject> s0_wallTiles = new List<GameObject>();
+    public List<GameObject> s0_outerWallTiles = new List<GameObject>();
 
-    //public GameObject[] s1_wallTiles;
-    //public GameObject[] s1_outerWallTiles;
-    public GameObject chestTile;
-  	public GameObject ExitLevel;
+    //public GameObject[] s0_wallTiles;
+    //public GameObject[] s0_outerWallTiles;
+    public GameObject s0_chestTile;
+    public GameObject s0_ExitLevel;
 
-    public GameObject[] enemyTiles;
+    public GameObject[] s0_enemyTiles;
 
     private Transform boardHolder;
+    private Transform stage1BoardHolder;
+    private Transform stage2BoardHolder;
+    private Dictionary<Vector2, Vector2> s0_gridPositions = new Dictionary<Vector2, Vector2>();
 
-    private Dictionary<Vector2, Vector2> gridPositions = new Dictionary<Vector2, Vector2>();
-    
     private Transform dungeonBoardHolder;
     private Dictionary<Vector2, Vector2> dungeonGridPositions = new Dictionary<Vector2, Vector2>();
 
-     private void LoadFloorTiles(int stage)
+    private void LoadFloorTiles(int stage)
     {
         try
         {
@@ -59,18 +59,14 @@ public class BoardManager : MonoBehaviour
             //    Debug.Log(floorTile.name);
             //}
 
-            var loadedObjects = Resources.LoadAll("Sprites/world0/Floor");
-            if (stage == 1)
-            {
-                loadedObjects = Resources.LoadAll("Sprites/world1/Floor");
-            }
-          
+            var loadedObjects = Resources.LoadAll("Sprites/world1/Floor");
+
             foreach (var loadedObject in loadedObjects)
             {
-                floorTiles.Add(loadedObject as GameObject);
+                s0_floorTiles.Add(loadedObject as GameObject);
             }
 
-            foreach (GameObject go in floorTiles)
+            foreach (GameObject go in s0_floorTiles)
             {
                 Debug.Log(go.name);
             }
@@ -80,7 +76,7 @@ public class BoardManager : MonoBehaviour
             Debug.Log("Proper Method failed with the following exception: ");
             Debug.Log(e);
         }
-        floorTilesArray = floorTiles.ToArray();
+        s0_floorTilesArray = s0_floorTiles.ToArray();
     }
 
     private void LoadWallTiles(int stage)
@@ -96,15 +92,15 @@ public class BoardManager : MonoBehaviour
             }
 
             foreach (var loadedObject in loadedObjects)
-        {
-            wallTiles.Add(loadedObject as GameObject);
-        }
+            {
+                s0_wallTiles.Add(loadedObject as GameObject);
+            }
 
-        foreach (GameObject go in wallTiles)
-        {
-            Debug.Log(go.name);
+            foreach (GameObject go in s0_wallTiles)
+            {
+                Debug.Log(go.name);
+            }
         }
-    }
         catch (Exception e)
         {
             Debug.Log("Proper Method failed with the following exception: ");
@@ -125,10 +121,10 @@ public class BoardManager : MonoBehaviour
 
             foreach (var loadedObject in loadedObjects)
             {
-                outerWallTiles.Add(loadedObject as GameObject);
+                s0_outerWallTiles.Add(loadedObject as GameObject);
             }
 
-            foreach (GameObject go in outerWallTiles)
+            foreach (GameObject go in s0_outerWallTiles)
             {
                 Debug.Log(go.name);
             }
@@ -140,62 +136,58 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void BoardSetup()
+    public void S1_BoardSetup()
     {
-        //Player.position = new Vector2(2, 2);
         //This is a placeholder for a rng seed, to be stored with the Player-profile. 
         //When the player saves the game, the seed is stored as well.
         int stagenumber = GameManager.instance.stageNumber;
-        boardHolder = new GameObject("Board").transform;
+        if (stagenumber == 1)
+        {
+            boardHolder = new GameObject("Board").transform;
+        }
 
-        //if (stagenumber == 0)
-        //{
-        //    boardHolder = new GameObject("Board").transform;
-        //}
-        //else 
-    
+
         LoadFloorTiles(stagenumber);
         LoadWallTiles(stagenumber);
         LoadOuterWallTiles(stagenumber);
 
-        for (int x =0; x < columns; x++)
+        for (int x = 0; x < columns; x++)
         {
-            for(int y = 0; y < rows; y++)
+            for (int y = 0; y < rows; y++)
             {
-                gridPositions.Add(new Vector2(x, y), new Vector2(x, y));
-          
-                GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Count)];
+                s0_gridPositions.Add(new Vector2(x, y), new Vector2(x, y));
+
+                GameObject toInstantiate = s0_floorTiles[Random.Range(0, s0_floorTiles.Count)];
 
                 GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
 
                 instance.transform.SetParent(boardHolder);
             }
         }
-        //Player.position = new Vector2 (2, 2);
     }
 
     private void addTiles(Vector2 tileToAdd)
     {
-        if (!gridPositions.ContainsKey(tileToAdd))
+        if (!s0_gridPositions.ContainsKey(tileToAdd))
         {
-            gridPositions.Add(tileToAdd, tileToAdd);
-            GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Count)];
+            s0_gridPositions.Add(tileToAdd, tileToAdd);
+            GameObject toInstantiate = s0_floorTiles[Random.Range(0, s0_floorTiles.Count)];
             GameObject instance = Instantiate(toInstantiate, new Vector3(tileToAdd.x, tileToAdd.y, 0f), Quaternion.identity) as GameObject;
 
             instance.transform.SetParent(boardHolder);
 
             //Choose a wallTile at random
-            if(Random.Range(0, 3) == 1)
+            if (Random.Range(0, 3) == 1)
             {
-                toInstantiate = wallTiles[Random.Range(0, wallTiles.Count)];
+                toInstantiate = s0_wallTiles[Random.Range(0, s0_wallTiles.Count)];
                 instance = Instantiate(toInstantiate, new Vector3(tileToAdd.x, tileToAdd.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(boardHolder);
             }
 
             //Generate Exit tiles which lead to Dungeons
-            else if(Random.Range(0, 15) == 1)
+            else if (Random.Range(0, 15) == 1)
             {
-                toInstantiate = exit;
+                toInstantiate = s0_exit;
                 instance = Instantiate(toInstantiate, new Vector3(tileToAdd.x, tileToAdd.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(boardHolder);
             }
@@ -203,7 +195,7 @@ public class BoardManager : MonoBehaviour
             //Generate Enemies 
             else if (Random.Range(0, GameManager.instance.enemySpawnRatio) == 1)
             {
-                toInstantiate = enemyTiles[Random.Range(0, enemyTiles.Length)];
+                toInstantiate = s0_enemyTiles[Random.Range(0, s0_enemyTiles.Length)];
                 instance = Instantiate(toInstantiate, new Vector3(tileToAdd.x, tileToAdd.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(boardHolder);
             }
@@ -211,7 +203,7 @@ public class BoardManager : MonoBehaviour
             //Generate s1_ExitLevel tiles which lead to Dungeons
             else if (GameManager.instance.XPPoints > 5 && Random.Range(0, 12) == 1)
             {
-                toInstantiate = ExitLevel;
+                toInstantiate = s0_ExitLevel;
                 instance = Instantiate(toInstantiate, new Vector3(tileToAdd.x, tileToAdd.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(boardHolder);
             }
@@ -290,46 +282,46 @@ public class BoardManager : MonoBehaviour
 
         foreach (KeyValuePair<Vector2, TileType> tile in dungeonTiles)
         {
-            toInstantiate = floorTiles[Random.Range(0, floorTiles.Count)];
+            toInstantiate = s0_floorTiles[Random.Range(0, s0_floorTiles.Count)];
             instance = Instantiate(toInstantiate, new Vector3(tile.Key.x, tile.Key.y, 0f), Quaternion.identity) as GameObject;
             instance.transform.SetParent(dungeonBoardHolder);
 
-            if(tile.Value == TileType.chest)
+            if (tile.Value == TileType.chest)
             {
-                toInstantiate = chestTile;
+                toInstantiate = s0_chestTile;
                 instance = Instantiate(toInstantiate, new Vector3(tile.Key.x, tile.Key.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(dungeonBoardHolder);
 
             }
-            else if(tile.Value == TileType.enemy)
+            else if (tile.Value == TileType.enemy)
             {
-                toInstantiate = enemyTiles[Random.Range(0, enemyTiles.Length)];
+                toInstantiate = s0_enemyTiles[Random.Range(0, s0_enemyTiles.Length)];
                 instance = Instantiate(toInstantiate, new Vector3(tile.Key.x, tile.Key.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(dungeonBoardHolder);
             }
             //Add random walltiles to the dungeons.
             else if (tile.Value == TileType.wall)
             {
-                toInstantiate = wallTiles[Random.Range(0, wallTiles.Count)];
+                toInstantiate = s0_wallTiles[Random.Range(0, s0_wallTiles.Count)];
                 instance = Instantiate(toInstantiate, new Vector3(tile.Key.x, tile.Key.y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(dungeonBoardHolder);
             }
         }
 
-        for (int x = -1 ; x < bound + 1; x++)
+        for (int x = -1; x < bound + 1; x++)
         {
-            for(int y = -1; y < bound + 1; y++)
+            for (int y = -1; y < bound + 1; y++)
             {
-                    if (!dungeonTiles.ContainsKey(new Vector2(x, y)))
+                if (!dungeonTiles.ContainsKey(new Vector2(x, y)))
                 {
-                    toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Count)];
+                    toInstantiate = s0_outerWallTiles[Random.Range(0, s0_outerWallTiles.Count)];
                     instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
                     instance.transform.SetParent(dungeonBoardHolder);
                 }
             }
         }
 
-        toInstantiate = exit;
+        toInstantiate = s0_exit;
         instance = Instantiate(toInstantiate, new Vector3(endPos.x, endPos.y, 0f), Quaternion.identity) as GameObject;
         instance.transform.SetParent(dungeonBoardHolder);
     }
@@ -342,21 +334,22 @@ public class BoardManager : MonoBehaviour
 
     public bool checkValidTile(Vector2 pos)
     {
-        if (gridPositions.ContainsKey(pos))
+        if (s0_gridPositions.ContainsKey(pos))
         {
             return true;
         }
         return false;
     }
 
-    public void clearScene()
+    public void transferScene()
     {
+        s0_gridPositions.Clear();
+        s0_floorTiles.Clear();
+        s0_wallTiles.Clear();
+        s0_outerWallTiles.Clear();
         boardHolder.gameObject.SetActive(false);
 
-        gridPositions.Clear();
-        floorTiles.Clear();
-        wallTiles.Clear();
-        outerWallTiles.Clear();
-        Destroy(boardHolder.gameObject);
+        stage2BoardHolder = new GameObject("Board").transform;
+        //stage1BoardHolder.gameObject.SetActive(true);
     }
 }

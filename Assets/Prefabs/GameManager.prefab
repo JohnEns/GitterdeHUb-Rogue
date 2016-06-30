@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11433656}
   - 114: {fileID: 11445686}
   - 114: {fileID: 11439582}
+  - 114: {fileID: 11409618}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Exit
@@ -30,6 +31,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11409618
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5222114b7a307f449d9a5e82df22f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  columns: 5
+  rows: 5
+  exit: {fileID: 143266, guid: c2aba3e0887d130488b8ba22319df5ef, type: 2}
+  floorTilesArray: []
+  floorTiles: []
+  wallTiles: []
+  outerWallTiles: []
+  chestTile: {fileID: 199894, guid: b5e1b58c50701be4688ac4f5d63cd013, type: 2}
+  ExitLevel: {fileID: 184230, guid: fc7bb6519f27bae4f8d1ae817b490d3e, type: 2}
+  enemyTiles:
+  - {fileID: 130908, guid: 63619eddb9dc4b847ad8d19c9f050d20, type: 2}
+  - {fileID: 115608, guid: 4391e23b29fcc934a8b2e1cc21cdeeb7, type: 2}
 --- !u!114 &11433656
 MonoBehaviour:
   m_ObjectHideFlags: 1

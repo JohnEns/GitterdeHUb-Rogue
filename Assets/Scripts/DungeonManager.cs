@@ -78,7 +78,7 @@ public class DungeonManager : MonoBehaviour {
 
         while (boundTracker < maxBound)
         {
-            //Add present position ePath to gridPositions
+            //Add present position ePath to s1_gridPositions
             gridPositions.Add(ePath.position, TileType.empty);
 
             //Select random surrounding tile

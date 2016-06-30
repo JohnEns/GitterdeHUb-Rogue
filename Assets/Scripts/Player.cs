@@ -17,7 +17,15 @@ public class Player : MovingObject
     private int villt;
     private int actions;
     private int capsuleMod;
-    private int playerXP;
+    public int playerXP;
+    public int level;
+    public int levelSpan;
+    public int levelNR;
+    private XPcalculator XPcalc;
+    //public int[,,] arrayXP;
+    List<int> XPlist = new List<int>();
+
+    private float fillRing;
     private int horizontal = 0;     //Used to store the horizontal move direction.
     private int vertical = 0;       //Used to store the vertical move direction.
     private RaycastHit2D hit ;
@@ -25,6 +33,7 @@ public class Player : MovingObject
     public static Vector2 position;
     public bool onWorldBoard;
     public bool dungeonTransition;
+    public bool stageTransition;
     public Image glove;
     public Image boot;
     public Image capsule;
@@ -41,7 +50,7 @@ public class Player : MovingObject
     public int weaponCompIndex2;
     private WeaponBlade weaponBlade;
     public int wp;
-   
+    public Vector2 stagePos;
 
     private SpriteRenderer spriteRenderer;
 
@@ -57,11 +66,24 @@ public class Player : MovingObject
     public AudioClip eatSound2;
     public AudioClip drinkSound1;
     public AudioClip drinkSound2;
+    public AudioClip hurt1;
+    public AudioClip hurt2;
     public AudioClip gameOverSound;
     public AudioClip equipItemSound;
     public AudioClip equipSwordSound;
     public AudioClip transitionSound;
     //public Camera UI_camera;
+
+    //test voor xp-klasse
+    public int startXP;
+    public int endXP;
+    //public int levelNR;
+    public int XPplayer;
+    public float XPfillFloat;
+    //einde test
+
+
+
 
     public int attackMod = 0, defenseMod = 0;
 
@@ -79,7 +101,14 @@ public class Player : MovingObject
 	{
 		//Get a component reference to the Player's animator component
 		animator = GetComponent<Animator>();
-		
+
+        XPcalc = GetComponent<XPcalculator>();
+        levelNR = 1;
+        //Deze variabele bestaat nog niet. Dit vervangt dan bovenstaande waarde. 
+        //levelNR = GameManager.instance.levelPlayer;
+
+        stagePos = new Vector2(2, 2);
+
 		//Get the current health point total stored in GameManager.instance between levels.
 		health = GameManager.instance.healthPoints;
         playerXP = GameManager.instance.XPPoints;
@@ -97,6 +126,7 @@ public class Player : MovingObject
         TextManager.instance.DefenseModText.text = " ";
         TextManager.instance.countDownText.text = " ";
         TextManager.instance.capModText.text = " ";
+        TextManager.instance.LevelTxt.text = "" + levelNR;
 
         countDownOn = false;
         countDown = 30;
@@ -106,10 +136,14 @@ public class Player : MovingObject
 
         onWorldBoard = true;
         dungeonTransition = false;
+        stageTransition = false;
 
         inventory = new Dictionary<String, Item>();
 
         currentWeaponImage.sprite = weaponEmpty;
+
+        FillXParray();
+        CheckContentXParray();
 
         //UI_camera = GetComponent<Camera>();
         //UI_camera.clearFlags = CameraClearFlags.SolidColor;
@@ -193,6 +227,7 @@ public class Player : MovingObject
         {
             villt--;
             GameManager.instance.villtPoints = villt;
+            TextManager.instance.villtSlider.value = villt;
         }
 
         TextManager.instance.healthText.text = " Health: " + health;
@@ -217,6 +252,8 @@ public class Player : MovingObject
         GameManager.instance.actionPoints = actions;
         GameManager.instance.XPPoints = playerXP;
         TextManager.instance.XPText.text = GameManager.instance.XPPoints + " XP";
+        //XPcalc.LevelCalculator();
+        xpMachine();
 
         if (countDownOn)
         {
@@ -225,6 +262,165 @@ public class Player : MovingObject
             TextManager.instance.capModText.text = " " + capsuleMod;
         }
     }
+
+    private void xpMachine()
+    {
+        //XPcalc.LevelCalculator();
+        LevelCalculator();
+    }
+    public void LevelCalculator()
+    {
+        //if (0 < playerXP && playerXP <= 20)
+        //{
+        //    PortXPdata(0, 20, 1);
+        //}
+        //else if (20 < playerXP && playerXP <= 50)
+        //{
+        //    PortXPdata(20, 50, 2);
+        //}
+        //else if (50 < playerXP && playerXP <= 75)
+        //{
+        //    PortXPdata(50, 75, 3);
+        //}
+        //else if (75 < XPplayer && XPplayer <= 180)
+        //{
+        //    PortXPdata(75, 180, 4);
+        //}
+        //else if (180 < XPplayer && XPplayer <= 220)
+        //{
+        //    PortXPdata(180, 220, 5);
+        //}
+        //else if (220 < XPplayer && XPplayer <= 300)
+        //{
+        //    PortXPdata(220, 300, 6);
+        //}
+        //else if (300 < XPplayer && XPplayer <= 400)
+        //{
+        //    PortXPdata(300, 400, 7);
+        //}
+
+        //Debug.Log(XPlist[levelNR]);
+        if (XPlist[levelNR] > playerXP)
+        {
+            int a = (XPlist[levelNR - 1]);
+            PortXPdata(levelNR, a, XPlist[levelNR]);
+        }
+        else if (playerXP >= XPlist[levelNR])
+        {
+            levelNR++;
+            //insert method for soundeffects etc for LEVELUP
+            xpMachine();
+        }
+    }
+    private void PortXPdata(int a, int b, int c)
+    {
+        levelNR = c; startXP = a; endXP = b;
+        FloatCalc(playerXP - startXP, endXP);
+        TextManager.instance.LevelTxt.text = "" + levelNR;
+    }
+
+    private void FloatCalc(int start, int end)
+    {
+        int levelSpan = end - start;
+
+        float teller = (int)((double)start);
+        float noemer = (int)((double)levelSpan);
+        XPfillFloat = teller / noemer;
+        TextManager.instance.fillAmountXP = XPfillFloat;
+    }
+
+    private void FillXParray()
+    {
+        //    var arrayXP = new[] { 100, 3 };
+        //    var arr = Array.CreateInstance(typeof(int), arrayXP);
+
+        //int start = 0;
+        int end = 20;
+        //int lvl = 1;
+
+        //    int a = 0;
+        //    int b = 0;
+        //    int c = 0;
+
+        //    var value = 1;
+
+        for (int i = 0; i < 35; i++)
+        {
+            XPlist.Add(end);
+            float multEnd = (int)((double)end * 1.5);
+            end = (int)multEnd;
+        }
+
+        //        arr.SetValue(value++, new[] { i, b, c});
+        //        b++;
+        //        c++;
+
+        //        //arrayXP[0, 0, 0] = lvl;
+        //        //arrayXP[0, 1, 0] = start;
+        //        //arrayXP[0, 0, 1] = end;
+
+        //        //arrayXP[a, b, c] = lvl;
+        //        //b = 1;
+        //        //arrayXP[a, yup, c] = start;
+        //        //c++;
+        //        //arrayXP[a, b, c] = end;
+        //        //a++;
+
+        //        for (int i = 0; i< 101; i++)
+        //        {
+        //            arrayXP[a, b, c] = lvl;
+        //            b++;
+        //            arrayXP[a, b, c] = start;
+        //            c++;
+        //            arrayXP[a, b, c] = end;
+        //            a++;
+
+        //            start = end;
+        //            end = 2 * end;
+        //            lvl++;
+
+
+
+    }
+
+    private void CheckContentXParray()
+    {
+        Debug.Log("De XP array inhoud weergegeven: ");
+
+        foreach (object s in XPlist)
+        {
+            Debug.Log("xplijst");
+            Debug.Log(s);
+        }
+
+            Debug.Log(" dit is XPlist[3]. Moet zijn 67.");
+            Debug.Log(XPlist[3]);
+
+
+        //    for (int i = 0; i < arrayXP.GetLength(2); i++)
+        //    {
+        //        for (int y = 0; y < arrayXP.GetLength(1); y++)
+        //        {
+        //            for (int x = 0; x < arrayXP.GetLength(0); x++)
+        //            {
+        //                int srt = arrayXP[i, 1, 0];
+        //                int endd = arrayXP[i, 0, 1];
+        //                Debug.Log("level -1 ");
+        //                Debug.Log(i);
+        //                Debug.Log("startXP ");
+        //                Debug.Log(srt);
+        //                Debug.Log("EindXP ");
+        //                Debug.Log(endd);
+
+        //            }
+        //            Debug.Log("...");
+        //        }
+        //        Debug.Log("...");
+
+        //    }
+    }
+
+
 
     private void CheckPlayerCollison()
     {
@@ -260,6 +456,13 @@ public class Player : MovingObject
         {
             int walk = Random.Range(0, walking.Length);
             SoundManager.instance.RandomizeSfx(walking[walk]);
+
+            if(stageTransition == true)
+            {
+                position.x = 2;
+                position.y = 2;
+                stageTransition = false;
+            }
 
             position.x += horizontal;
             position.y += vertical;
@@ -332,16 +535,21 @@ public class Player : MovingObject
 	//It takes a parameter loss which specifies how many points to lose.
 	public void LoseHealth (int loss)
 	{
-		//Set the trigger for the player animator to transition to the playerHit animation.
-		animator.SetTrigger ("playerHit");
-		
-		//Subtract lost health points from the players total.
-		health -= loss;
+        TextManager.instance.playerDamaged = true;
+
+        //Set the trigger for the player animator to transition to the playerHit animation.
+        animator.SetTrigger ("playerHit");
+
+        SoundManager.instance.RandomizeSfx(hurt1, hurt2);
+
+        //Subtract lost health points from the players total.
+        health -= loss;
         GameManager.instance.healthPoints = health;
 
         //Update the health display with the new total.
         TextManager.instance.healthText.text = "-" + loss + " Health: " + health;
-		
+        TextManager.instance.healthSlider.value = health;
+
         //Check to see if game has ended.
         CheckIfGameOver ();
 	}
@@ -378,7 +586,9 @@ public class Player : MovingObject
 
     private void GoStagePortal()
     {
+        transform.position = stagePos;
         GameManager.instance.stageTransition();
+
     }
 
     private void UpdateHealth(Collider2D item)
@@ -395,6 +605,8 @@ public class Player : MovingObject
             }
             GameManager.instance.healthPoints = health;
             TextManager.instance.healthText.text = "Health: " + health;
+            TextManager.instance.healthSlider.value = health;
+
         }
     }
 
@@ -405,6 +617,7 @@ public class Player : MovingObject
             villt += Random.Range(8, 18);
             GameManager.instance.villtPoints = villt;
             TextManager.instance.villtText.text = "Villt: " + villt;
+            TextManager.instance.villtSlider.value = villt;
         }
     }
 
@@ -517,6 +730,8 @@ public class Player : MovingObject
     {
         if (other.tag == "ExitLevel")
         {
+            //transform.position = stagePos;
+            stageTransition = true;
             Invoke("GoStagePortal", 0.5f);
             Destroy(other.gameObject);
             AddXP(30);
